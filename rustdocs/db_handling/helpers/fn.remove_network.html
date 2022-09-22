@@ -1,0 +1,38 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Remove the network from the database."><meta name="keywords" content="rust, rustlang, rust-lang, remove_network"><title>remove_network in db_handling::helpers - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc fn"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../db_handling/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"></h2>
+    </nav>
+    <nav class="sidebar"><a class="sidebar-logo" href="../../db_handling/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
+        </a><div class="sidebar-elems"><h2 class="location"><a href="index.html">In db_handling::helpers</a></h2></div></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../db_handling/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
+                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
+                        </div></form></nav></div><section id="main-content" class="content"><div class="main-heading">
+    <h1 class="fqn"><span class="in-band">Function <a href="../index.html">db_handling</a>::<wbr><a href="index.html">helpers</a>::<wbr><a class="fn" href="#">remove_network</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../../clipboard.svg" width="19" height="18" alt="Copy item path"></button></span></h1><span class="out-of-band"><a class="srclink" href="../../src/db_handling/helpers.rs.html#533-632">source</a> · <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span></div><div class="docblock item-decl"><pre class="rust fn"><code>pub fn remove_network&lt;P&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;network_specs_key: &amp;<a class="struct" href="../../definitions/keyring/struct.NetworkSpecsKey.html" title="struct definitions::keyring::NetworkSpecsKey">NetworkSpecsKey</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;db_path: P<br>) -&gt; <a class="type" href="../type.Result.html" title="type db_handling::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.63.0/std/primitive.unit.html">()</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;P: <a class="trait" href="https://doc.rust-lang.org/1.63.0/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.63.0/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;,&nbsp;</span></code></pre></div><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Remove the network from the database.</p>
+<p>Function inputs <a href="../../definitions/keyring/struct.NetworkSpecsKey.html" title="NetworkSpecsKey"><code>NetworkSpecsKey</code></a> of the network, gets network genesis
+hash and proceeds to act on <strong>all</strong> networks with same genesis hash.</p>
+<p>Removing network is mostly an emergency tool and is not expected to be used
+really often.</p>
+<p>Removing a network means:</p>
+<ul>
+<li>Remove from <a href="../../constants/constant.SPECSTREE.html" title="SPECSTREE"><code>SPECSTREE</code></a> all <a href="../../definitions/network_specs/struct.NetworkSpecs.html" title="NetworkSpecs"><code>NetworkSpecs</code></a> that have genesis hash
+associated with given <code>NetworkSpecsKey</code></li>
+<li>Remove from <a href="../../constants/constant.METATREE.html" title="METATREE"><code>METATREE</code></a> all metadata entries corresponding to the network
+name, as found in <code>NetworkSpecs</code></li>
+<li>Remove from <a href="../../constants/constant.ADDRTREE.html" title="ADDRTREE"><code>ADDRTREE</code></a> all addresses in the networks being removed</li>
+<li>Modify <code>Verifier</code> data if necessary.</li>
+</ul>
+<p>Removing the network <strong>may result</strong> in blocking the network altogether until
+the Signer is reset. This happens only if the removed network
+<a href="../../definitions/network_specs/enum.ValidCurrentVerifier.html" title="ValidCurrentVerifier"><code>ValidCurrentVerifier</code></a> was set to
+<code>ValidCurrentVerifier::Custom(Verifier(Some(_)))</code> and is a security measure.
+This should be used to deal with compromised <code>Custom</code> verifiers.</p>
+<p>Compromised general verifier is a major disaster and will require Signer
+reset in any case.</p>
+<p>Removing the network verified by the general verifier <strong>does not</strong> block the
+network.</p>
+<p>Removing the network verified by
+<code>ValidCurrentVerifier::Custom(Verifier(None))</code> <strong>does not</strong> block the
+network.</p>
+<p>Note that if the network supports multiple encryption algorithms, the
+removal of network with one of the encryptions will cause the networks
+with other encryptions be removed as well.</p>
+</div></details></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="db_handling" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
+</body></html>

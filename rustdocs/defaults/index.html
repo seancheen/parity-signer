@@ -1,0 +1,71 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Default data for Signer and Signer-supporting ecosystem."><meta name="keywords" content="rust, rustlang, rust-lang, defaults"><title>defaults - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../dark.css" disabled><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../storage.js"></script><script defer src="../crates.js"></script><script defer src="../main.js"></script><noscript><link rel="stylesheet" href="../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../favicon.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../defaults/index.html"><div class="logo-container"><img class="rust-logo" src="../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"></h2>
+    </nav>
+    <nav class="sidebar"><a class="sidebar-logo" href="../defaults/index.html"><div class="logo-container"><img class="rust-logo" src="../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"><a href="#">Crate defaults</a></h2><div class="sidebar-elems"><div class="block"><ul><li class="version">Version 0.1.0</li><li><a id="all-types" href="all.html">All Items</a></li></ul></div><section><div class="block"><ul><li><a href="#enums">Enums</a></li><li><a href="#constants">Constants</a></li><li><a href="#functions">Functions</a></li><li><a href="#types">Type Definitions</a></li></ul></div></section></div></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../defaults/index.html"><img class="rust-logo" src="../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
+                                <a href="../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../wheel.svg"></a></div>
+                        </div></form></nav></div><section id="main-content" class="content"><div class="main-heading">
+    <h1 class="fqn"><span class="in-band">Crate <a class="mod" href="#">defaults</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../clipboard.svg" width="19" height="18" alt="Copy item path"></button></span></h1><span class="out-of-band"><a class="srclink" href="../src/defaults/lib.rs.html#1-486">source</a> · <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span></div><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Default data for <a href="https://github.com/paritytech/parity-signer">Signer</a>
+and Signer-supporting ecosystem.</p>
+<p>This crate deals with data loaded into Signer on build and retained on reset.</p>
+<p>Signer supports by default three networks: Polkadot, Kusama, and Westend,
+both on the cold and the hot side. More default networks could be considered
+in the future.</p>
+<h2 id="defaults-in-the-cold-database"><a href="#defaults-in-the-cold-database">Defaults in the cold database</a></h2>
+<p>Default build of the cold database for Signer includes:</p>
+<ul>
+<li>general verifier <code>Verifier</code> set to <code>Some(VerifierValue)</code> with Parity
+public key as a verifier value</li>
+<li>network specs <code>NetworkSpecs</code> for default networks</li>
+<li>verifiers for default networks, set to
+<code>CurrentVerifier::Valid(ValidCurrentVerifier::General)</code></li>
+<li>two latest metadata versions for each of the default networks</li>
+<li>default types information</li>
+</ul>
+<p>Latest metadata entries get updated as soon as they are published and could
+be fetched via RPC calls. For this, new metadata entry is added into
+<code>release_metadata</code> folder, and older one is removed.</p>
+<h2 id="defaults-in-the-hot-database"><a href="#defaults-in-the-hot-database">Defaults in the hot database</a></h2>
+<p>Default hot database contains:</p>
+<ul>
+<li>network specs <code>NetworkSpecsToSend</code> for default networks</li>
+<li>address book containing the data for default networks</li>
+<li>default types information</li>
+</ul>
+<h2 id="features"><a href="#features">Features</a></h2>
+<p>Feature <code>&quot;signer&quot;</code> corresponds to everything related to Signer air-gapped
+device. Currently the only Signer-related default is <code>Verifier</code> with Parity
+public key, that could be set up as a general verifier after Signer wipe by
+the user.</p>
+<p>Feature <code>&quot;active&quot;</code> corresponds to all Signer-related things happening
+<strong>without</strong> air-gap. This includes generating default:</p>
+<ul>
+<li>network specs sets for cold and hot databases</li>
+<li>verifiers for cold databases</li>
+<li>metadata sets for cold databases</li>
+<li>address book for hot database</li>
+<li>types information for cold and hot databases</li>
+</ul>
+<p>Feature <code>&quot;test&quot;</code> includes both <code>&quot;signer&quot;</code> and <code>&quot;active&quot;</code> features, along
+with some testing, and is the default one.  </p>
+</div></details><h2 id="enums" class="small-section-header"><a href="#enums">Enums</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.Error.html" title="defaults::Error enum">Error</a></div><div class="item-right docblock-short"></div></div></div><h2 id="constants" class="small-section-header"><a href="#constants">Constants</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.DEFAULT_VERIFIER_PUBLIC.html" title="defaults::DEFAULT_VERIFIER_PUBLIC constant">DEFAULT_VERIFIER_PUBLIC</a></div><div class="item-right docblock-short"><p>Real Parity public key, with <code>Sr25519</code> encryption</p>
+</div></div></div><h2 id="functions" class="small-section-header"><a href="#functions">Functions</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.default_address_book.html" title="defaults::default_address_book fn">default_address_book</a></div><div class="item-right docblock-short"><p>Generate address book set for the default networks, for hot database</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.default_chainspecs.html" title="defaults::default_chainspecs fn">default_chainspecs</a></div><div class="item-right docblock-short"><p>Generate network specs <a href="../definitions/network_specs/struct.NetworkSpecs.html" title="NetworkSpecs"><code>NetworkSpecs</code></a> set for the default networks, for
+cold database</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.default_chainspecs_to_send.html" title="defaults::default_chainspecs_to_send fn">default_chainspecs_to_send</a></div><div class="item-right docblock-short"><p>Generate network specs <a href="../definitions/network_specs/struct.NetworkSpecsToSend.html" title="NetworkSpecsToSend"><code>NetworkSpecsToSend</code></a> set for the default networks,
+for hot database</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.default_general_verifier.html" title="defaults::default_general_verifier fn">default_general_verifier</a></div><div class="item-right docblock-short"><p>Generate default general verifier <a href="../definitions/network_specs/struct.Verifier.html" title="Verifier"><code>Verifier</code></a>, with Parity public key
+inside.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.default_types_content.html" title="defaults::default_types_content fn">default_types_content</a></div><div class="item-right docblock-short"><p>Generate default types as <a href="../definitions/qr_transfers/struct.ContentLoadTypes.html" title="ContentLoadTypes"><code>ContentLoadTypes</code></a></p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.default_types_vec.html" title="defaults::default_types_vec fn">default_types_vec</a></div><div class="item-right docblock-short"><p>Generate default types as <a href="../definitions/types/struct.TypeEntry.html" title="TypeEntry"><code>TypeEntry</code></a> set</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.default_verifiers.html" title="defaults::default_verifiers fn">default_verifiers</a></div><div class="item-right docblock-short"><p>Generate verifiers set for the default networks, for cold database</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.nav_test_metadata.html" title="defaults::nav_test_metadata fn">nav_test_metadata</a></div><div class="item-right docblock-short"><p>Read metadata set for navigation test cold database from <code>nav_test_metadata</code>
+folder</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.release_metadata.html" title="defaults::release_metadata fn">release_metadata</a></div><div class="item-right docblock-short"><p>Read metadata set for release cold database from <code>release_metadata</code> folder</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.test_metadata.html" title="defaults::test_metadata fn">test_metadata</a></div><div class="item-right docblock-short"><p>Read metadata set for test cold database from <code>test_metadata</code> folder</p>
+</div></div></div><h2 id="types" class="small-section-header"><a href="#types">Type Definitions</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="type" href="type.Result.html" title="defaults::Result type">Result</a></div><div class="item-right docblock-short"></div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="defaults" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
+</body></html>

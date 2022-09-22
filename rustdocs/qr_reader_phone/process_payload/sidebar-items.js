@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":[["InProgress",""],["Ready",""]],"fn":[["process_decoded_payload",""]],"struct":[["Element",""],["Fountain",""],["LegacyMulti",""]]};

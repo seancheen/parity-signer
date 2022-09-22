@@ -1,0 +1,673 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `definitions/src/error_signer.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>error_signer.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../definitions/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"></h2>
+    </nav>
+    <nav class="sidebar"><a class="sidebar-logo" href="../../definitions/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
+        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../definitions/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
+                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
+                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<span id="2">2</span>
+<span id="3">3</span>
+<span id="4">4</span>
+<span id="5">5</span>
+<span id="6">6</span>
+<span id="7">7</span>
+<span id="8">8</span>
+<span id="9">9</span>
+<span id="10">10</span>
+<span id="11">11</span>
+<span id="12">12</span>
+<span id="13">13</span>
+<span id="14">14</span>
+<span id="15">15</span>
+<span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
+<span id="88">88</span>
+<span id="89">89</span>
+<span id="90">90</span>
+<span id="91">91</span>
+<span id="92">92</span>
+<span id="93">93</span>
+<span id="94">94</span>
+<span id="95">95</span>
+<span id="96">96</span>
+<span id="97">97</span>
+<span id="98">98</span>
+<span id="99">99</span>
+<span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Errors occurring in Signer</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;test&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident">variant_count::VariantCount</span>;
+
+<span class="doccomment">/// Content that should have been verified by the general verifier</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;test&quot;</span>, <span class="ident">derive</span>(<span class="ident">VariantCount</span>))]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">GeneralVerifierForContent</span> {
+    <span class="doccomment">/// Network data.</span>
+    <span class="doccomment">/// Associated data is the network name.</span>
+    <span class="ident">Network</span> { <span class="ident">name</span>: <span class="ident">String</span> },
+
+    <span class="doccomment">/// Types information.</span>
+    <span class="ident">Types</span>,
+}
+
+<span class="doccomment">/// Errors in transaction parsing</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;test&quot;</span>, <span class="ident">derive</span>(<span class="ident">VariantCount</span>))]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ParserError</span> {
+    <span class="ident">SeparateMethodExtensions</span>,
+
+    <span class="doccomment">/// Errors occurring during the decoding procedure.</span>
+    <span class="ident">Decoding</span>(<span class="ident">ParserDecodingError</span>),
+
+    <span class="doccomment">/// Errors occurring because the metadata</span>
+    <span class="doccomment">/// [`RuntimeMetadataV14`](https://docs.rs/frame-metadata/15.0.0/frame_metadata/v14/struct.RuntimeMetadataV14.html)</span>
+    <span class="doccomment">/// has extensions not acceptable in existing safety paradigm for</span>
+    <span class="doccomment">/// signable transactions.</span>
+    <span class="ident">FundamentallyBadV14Metadata</span>(<span class="ident">ParserMetadataError</span>),
+
+    <span class="doccomment">/// While parsing transaction with certain version of network metadata,</span>
+    <span class="doccomment">/// found that the version found in signable extensions does not match</span>
+    <span class="doccomment">/// the version of the metadata used for parsing.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Transaction parsing in Signer is done by consecutively checking all</span>
+    <span class="doccomment">/// available metadata for a given network name, starting with the highest</span>
+    <span class="doccomment">/// available version, and looking for a matching network version in the</span>
+    <span class="doccomment">/// parsed extensions.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// For `RuntimeMetadataV12` and `RuntimeMetadataV13` the extensions set</span>
+    <span class="doccomment">/// is a fixed one, whereas for `RuntimeMetadataV14` is may vary and is</span>
+    <span class="doccomment">/// determined by the metadata itself.</span>
+    <span class="ident">WrongNetworkVersion</span> {
+        <span class="doccomment">/// metadata version from transaction extensions, as found through</span>
+        <span class="doccomment">/// parsing process</span>
+        <span class="ident">as_decoded</span>: <span class="ident">String</span>,
+
+        <span class="doccomment">/// metadata version actually used for parsing, from the `Version`</span>
+        <span class="doccomment">/// constant in `System` pallet of the metadata</span>
+        <span class="ident">in_metadata</span>: <span class="ident">u32</span>,
+    },
+}
+
+<span class="doccomment">/// Errors directly related to transaction parsing</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Signable transactions are differentiated based on prelude:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// - `53xx00` mortal transactions</span>
+<span class="doccomment">/// - `53xx02` immortal transactions</span>
+<span class="doccomment">/// - `53xx03` text message transactions</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// `53xx00` and `53xx02` transactions contain encoded transaction data, and</span>
+<span class="doccomment">/// are parsed prior to signing using the network metadata. Transaction is</span>
+<span class="doccomment">/// generated in client, for certain address and within certain network.</span>
+<span class="doccomment">/// To parse the transaction and to generate the signature, Signer must</span>
+<span class="doccomment">/// have the network information (network specs and correct network metadata)</span>
+<span class="doccomment">/// and the public address-associated information in its database.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// `53xx00` and `53xx02` transcations consist of:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// - prelude, `53xx00` or `53xx02`, where `xx` stands for the encryption</span>
+<span class="doccomment">/// algorithm associated with address and network used</span>
+<span class="doccomment">/// - public key corresponding to the address that can sign the transaction</span>
+<span class="doccomment">/// - encoded call data, the body of the transaction</span>
+<span class="doccomment">/// - extensions, as set in the network metadata</span>
+<span class="doccomment">/// - genesis hash of the network in which the transaction was generated</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Parsing process first separates the prelude, public key, genesis hash and</span>
+<span class="doccomment">/// the combined call + extensions data.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The call information is SCALE-encoded into `Vec&lt;u8&gt;` bytes and then those</span>
+<span class="doccomment">/// bytes are SCALE-encoded again, so that the call data contained in the</span>
+<span class="doccomment">/// transaction consists of `compact` with encoded call length in bytes</span>
+<span class="doccomment">/// followed by the `Vec&lt;u8&gt;` with the encoded data.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Call and extensions are cut based on the call length declared at the start</span>
+<span class="doccomment">/// of the combined call + extensions data.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Then the extensions are decoded, and it is checked that the metadata version</span>
+<span class="doccomment">/// in extensions coincides with the metadata version used for the decoding.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Decoding the extensions for metadata with `RuntimeMetadataV12` or</span>
+<span class="doccomment">/// `RuntimeMetadataV13` is using a static set of extensions, namely:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// - [`Era`](https://docs.rs/sp-runtime/6.0.0/sp_runtime/generic/enum.Era.html)</span>
+<span class="doccomment">/// - nonce, compact `u64`</span>
+<span class="doccomment">/// - transaction tip, compact `u128`</span>
+<span class="doccomment">/// - metadata version, `u32`</span>
+<span class="doccomment">/// - tx version, `u32`</span>
+<span class="doccomment">/// - network genesis hash, `[u8; 32]`</span>
+<span class="doccomment">/// - block hash, `[u8; 32]`</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Decoding the extensions for metadata with `RuntimeMetadataV14` uses</span>
+<span class="doccomment">/// dynamically acquired set of extensions from the metadata itself.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// After the extensions, the call data itself is decoded using the network</span>
+<span class="doccomment">/// metadata. Each call first byte is the index of the pallet.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Metadata with `RuntimeMetadataV12` or `RuntimeMetadataV13` has only type</span>
+<span class="doccomment">/// names associated with call arguments. Signer finds what the types really</span>
+<span class="doccomment">/// are and how to decode them by using the types information that must be in</span>
+<span class="doccomment">/// Signer database.</span>
+<span class="doccomment">/// For `RuntimeMetadataV12` or `RuntimeMetadataV13` the second byte in call is</span>
+<span class="doccomment">/// the index of the method within the pallet, and thes Signer finds the types</span>
+<span class="doccomment">/// used by the method and proceeds to decode the call data piece by piece.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Metadata with `RuntimeMetadataV14` has types data in-built in the metadata</span>
+<span class="doccomment">/// itself, and the types needed to decode the call are resolved during the</span>
+<span class="doccomment">/// decoding. For `RuntimeMetadataV14` the second byte in call is also</span>
+<span class="doccomment">/// the index of the method within the pallet, but this already goes into the</span>
+<span class="doccomment">/// type resolver.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Calls may contain nested calls, for `RuntimeMetadataV12` or</span>
+<span class="doccomment">/// `RuntimeMetadataV13` metadata the call decoding always starts with pallet</span>
+<span class="doccomment">/// and method combination processing. For `RuntimeMetadataV14` metadata the</span>
+<span class="doccomment">/// nested calls are processed through the type resolver, i.e. the pallet index</span>
+<span class="doccomment">/// is processed independently only on the start of the decoding.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// `53xx03` transaction consists of:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// - prelude `53xx03`, where `xx` stands for the encryption algorithm</span>
+<span class="doccomment">/// associated with address and network used</span>
+<span class="doccomment">/// - public key corresponding to the address that can sign the transaction</span>
+<span class="doccomment">/// - SCALE-encoded `String` contents of the message</span>
+<span class="doccomment">/// - genesis hash of the network in which the transaction was generated</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Signer assumes that every byte of the transaction will be processed, and</span>
+<span class="doccomment">/// shows an error if this is not the case.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;test&quot;</span>, <span class="ident">derive</span>(<span class="ident">VariantCount</span>))]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ParserDecodingError</span> {
+    <span class="doccomment">/// Transaction was announced by the prelude to be mortal (`53xx00`),</span>
+    <span class="doccomment">/// but has `Era::Immortal` in extensions</span>
+    <span class="ident">UnexpectedImmortality</span>,
+
+    <span class="doccomment">/// Transaction was announced by the prelude to be immortal (`53xx02`),</span>
+    <span class="doccomment">/// but has `Era::Mortal(_, _)` in extensions</span>
+    <span class="ident">UnexpectedMortality</span>,
+
+    <span class="doccomment">/// Genesis hash cut from the end of the transaction does not match the one</span>
+    <span class="doccomment">/// found in the extensions</span>
+    <span class="ident">GenesisHashMismatch</span>,
+
+    <span class="doccomment">/// In immortal transaction the block hash from the extensions is the</span>
+    <span class="doccomment">/// network genesis hash.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This error happens when block hash is different with the genesis hash</span>
+    <span class="doccomment">/// cut from the end of the transaction.</span>
+    <span class="ident">ImmortalHashMismatch</span>,
+
+    <span class="doccomment">/// Error decoding the extensions using metadata with `RuntimeMetadataV12`</span>
+    <span class="doccomment">/// or `RuntimeMetadataV13`, with default extensions set.</span>
+    <span class="ident">ExtensionsOlder</span>,
+
+    <span class="doccomment">/// Used only for `RuntimeMetadataV12` or `RuntimeMetadataV13`,</span>
+    <span class="doccomment">/// indicates that method index (second byte of the call data) is not valid</span>
+    <span class="doccomment">/// for the pallet with found name.</span>
+    <span class="ident">MethodNotFound</span> {
+        <span class="doccomment">/// index of the method, second byte of the call data</span>
+        <span class="ident">method_index</span>: <span class="ident">u8</span>,
+
+        <span class="doccomment">/// name of the pallet, found from the first byte of the call data</span>
+        <span class="ident">pallet_name</span>: <span class="ident">String</span>,
+    },
+
+    <span class="doccomment">/// Used only for all calls in `RuntimeMetadataV12` or `RuntimeMetadataV13`,</span>
+    <span class="doccomment">/// and for entry call in `RuntimeMetadataV14` metadata. First byte of the</span>
+    <span class="doccomment">/// call data is not a valid pallet index.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Associated data is what was thought to be a pallet index.</span>
+    <span class="ident">PalletNotFound</span>(<span class="ident">u8</span>),
+
+    <span class="doccomment">/// Only for entry call in `RuntimeMetadataV14`. Pallet found via first byte</span>
+    <span class="doccomment">/// of the call has no associated calls.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Associated data is the pallet name.</span>
+    <span class="ident">NoCallsInPallet</span>(<span class="ident">String</span>),
+
+    <span class="doccomment">/// Only for `RuntimeMetadataV14`. Found type index could not be resolved</span>
+    <span class="doccomment">/// in types registry</span>
+    <span class="ident">V14TypeNotResolved</span>,
+
+    <span class="doccomment">/// Only for `RuntimeMetadataV12` and `RuntimeMetadataV13`. Argument type</span>
+    <span class="doccomment">/// could not be taken out of `DecodeDifferent` construction.</span>
+    <span class="ident">ArgumentTypeError</span>,
+
+    <span class="doccomment">/// Only for `RuntimeMetadataV12` and `RuntimeMetadataV13`. Argument name</span>
+    <span class="doccomment">/// could not be taken out of `DecodeDifferent` construction.</span>
+    <span class="ident">ArgumentNameError</span>,
+
+    <span class="doccomment">/// Parser was trying to find an encoded</span>
+    <span class="doccomment">/// [`compact`](https://docs.rs/parity-scale-codec/latest/parity_scale_codec/struct.Compact.html),</span>
+    <span class="doccomment">/// in the bytes sequence, but was unable to.</span>
+    <span class="ident">NoCompact</span>,
+
+    <span class="doccomment">/// Parser was expecting more data.</span>
+    <span class="ident">DataTooShort</span>,
+
+    <span class="doccomment">/// Parser was unable to decode the data piece into a primitive type.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Associated data is primitive identifier.</span>
+    <span class="ident">PrimitiveFailure</span>(<span class="ident">String</span>),
+
+    <span class="doccomment">/// SCALE-encoded `Option&lt;_&gt;` can have as a first byte:</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// - `0` if the value is `None`</span>
+    <span class="doccomment">/// - `1` if the value is `Some`</span>
+    <span class="doccomment">/// - `2` if the value is `Some(false)` for `Option&lt;bool&gt;` encoding</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This error appears if the parser encounters something unexpected in the</span>
+    <span class="doccomment">/// first byte of encoded `Option&lt;_&gt;` instead.</span>
+    <span class="ident">UnexpectedOptionVariant</span>,
+
+    <span class="doccomment">/// Only for `RuntimeMetadataV12` and `RuntimeMetadataV13`.</span>
+    <span class="doccomment">/// Decoding</span>
+    <span class="doccomment">/// [`IdentityFields`](https://docs.substrate.io/rustdocs/latest/pallet_identity/struct.IdentityFields.html)</span>
+    <span class="doccomment">/// requires having correct type information for</span>
+    <span class="doccomment">/// [`IdentityField`](https://docs.substrate.io/rustdocs/latest/pallet_identity/enum.IdentityField.html)</span>
+    <span class="doccomment">/// in types information. If types information has no entry for</span>
+    <span class="doccomment">/// `IdentityFields` or it is not an enum, this error appears.</span>
+    <span class="ident">IdFields</span>,
+
+    <span class="doccomment">/// Parser processes certain types as balance (i.e. transforms the data</span>
+    <span class="doccomment">/// into appropriate float using decimals and units provided).</span>
+    <span class="doccomment">/// For some types the balance representation is not possible, this error</span>
+    <span class="doccomment">/// occurs if the parser tried to process as a balance some type not</span>
+    <span class="doccomment">/// suitable for it.</span>
+    <span class="ident">BalanceNotDescribed</span>,
+
+    <span class="doccomment">/// SCALE-encoded enum can have as a first byte only correct index of the</span>
+    <span class="doccomment">/// variant used.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This error appears if the first byte is an invalid variant index.</span>
+    <span class="ident">UnexpectedEnumVariant</span>,
+
+    <span class="doccomment">/// Parser found that type declared as a</span>
+    <span class="doccomment">/// [`compact`](https://docs.rs/parity-scale-codec/latest/parity_scale_codec/struct.Compact.html)</span>
+    <span class="doccomment">/// has inner type that could not be encoded as a `compact`</span>
+    <span class="ident">UnexpectedCompactInsides</span>,
+
+    <span class="doccomment">/// Only for `RuntimeMetadataV12` and `RuntimeMetadataV13`.</span>
+    <span class="doccomment">/// Parser has encountered a type that could not be interpreted using the</span>
+    <span class="doccomment">/// existing types information.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Associated data is the type description as it was received by parser</span>
+    <span class="doccomment">/// from the metadata.</span>
+    <span class="ident">UnknownType</span>(<span class="ident">String</span>),
+
+    <span class="doccomment">/// Only for `RuntimeMetadataV14`.</span>
+    <span class="doccomment">/// While decoding</span>
+    <span class="doccomment">/// [`BitVec&lt;T,O&gt;`](https://docs.rs/bitvec/1.0.0/bitvec/vec/struct.BitVec.html),</span>
+    <span class="doccomment">/// parser encountered `T` type not implementing</span>
+    <span class="doccomment">/// [`BitStore`](https://docs.rs/bitvec/1.0.0/bitvec/store/trait.BitStore.html).</span>
+    <span class="ident">NotBitStoreType</span>,
+
+    <span class="doccomment">/// Only for `RuntimeMetadataV14`.</span>
+    <span class="doccomment">/// While decoding</span>
+    <span class="doccomment">/// [`BitVec&lt;T,O&gt;`](https://docs.rs/bitvec/1.0.0/bitvec/vec/struct.BitVec.html),</span>
+    <span class="doccomment">/// parser encountered `O` type not implementing</span>
+    <span class="doccomment">/// [`BitOrder`](https://docs.rs/bitvec/1.0.0/bitvec/order/trait.BitOrder.html).</span>
+    <span class="ident">NotBitOrderType</span>,
+
+    <span class="doccomment">/// Only for `RuntimeMetadataV14`.</span>
+    <span class="doccomment">/// Parser failed to decode</span>
+    <span class="doccomment">/// [`BitVec&lt;T,O&gt;`](https://docs.rs/bitvec/1.0.0/bitvec/vec/struct.BitVec.html),</span>
+    <span class="doccomment">/// even though `T` and `O` types were suitable.</span>
+    <span class="ident">BitVecFailure</span>,
+
+    <span class="doccomment">/// Only for `RuntimeMetadataV14`.</span>
+    <span class="doccomment">/// Parser failed to decode data slice as</span>
+    <span class="doccomment">/// [`Era`](https://docs.rs/sp-runtime/6.0.0/sp_runtime/generic/enum.Era.html).</span>
+    <span class="ident">Era</span>,
+
+    <span class="doccomment">/// Parser expects to use all data in decoding. This error appears if some</span>
+    <span class="doccomment">/// data was not used in parsing of the method.</span>
+    <span class="ident">SomeDataNotUsedMethod</span>,
+
+    <span class="doccomment">/// Only for `RuntimeMetadataV14`.</span>
+    <span class="doccomment">/// Parser expects to use all data in decoding. This error appears if some</span>
+    <span class="doccomment">/// data from extensions is not used in the decoding.</span>
+    <span class="ident">SomeDataNotUsedExtensions</span>,
+}
+
+<span class="doccomment">/// Errors occurring because the network metadata</span>
+<span class="doccomment">/// [`RuntimeMetadataV14`](https://docs.rs/frame-metadata/15.0.0/frame_metadata/v14/struct.RuntimeMetadataV14.html)</span>
+<span class="doccomment">/// has extensions not compatible with Signer.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// To be compatible with signable transactions, metadata extensions must</span>
+<span class="doccomment">/// include:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// - `Era` (once)</span>
+<span class="doccomment">/// - block hash (once)</span>
+<span class="doccomment">/// - metadata version (once)</span>
+<span class="doccomment">/// - network genesis hash (at most, once)</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// If the metadata does not follow those criteria, transactions could not be</span>
+<span class="doccomment">/// parsed, and therefore, could not be signed.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;test&quot;</span>, <span class="ident">derive</span>(<span class="ident">VariantCount</span>))]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ParserMetadataError</span> {
+    <span class="doccomment">/// Metadata extensions have no `Era`</span>
+    <span class="ident">NoEra</span>,
+
+    <span class="doccomment">/// Metadata extensions have no block hash</span>
+    <span class="ident">NoBlockHash</span>,
+
+    <span class="doccomment">/// Metadata extensions have no network metadata version</span>
+    <span class="ident">NoVersionExt</span>,
+
+    <span class="doccomment">/// Metadata extensions have more than one `Era`</span>
+    <span class="ident">EraTwice</span>,
+
+    <span class="doccomment">/// Metadata extensions have more than one genesis hash</span>
+    <span class="ident">GenesisHashTwice</span>,
+
+    <span class="doccomment">/// Metadata extensions have more than one block hash</span>
+    <span class="ident">BlockHashTwice</span>,
+
+    <span class="doccomment">/// Metadata extensions have more than one network metadata version</span>
+    <span class="ident">SpecVersionTwice</span>,
+}
+</code></pre></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="definitions" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
+</body></html>

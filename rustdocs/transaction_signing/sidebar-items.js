@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":[["Error","Transaction signing error."],["SufficientContent","Possible content to generate sufficient crypto for"]],"fn":[["handle_sign",""],["handle_stub",""],["sign_content",""]],"type":[["Result","Transaction signing result."]]};

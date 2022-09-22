@@ -1,0 +1,43 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Fit network properties fetched via RPC call into data in expected format"><meta name="keywords" content="rust, rustlang, rust-lang, interpret_specs"><title>generate_message::interpret_specs - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../generate_message/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"></h2>
+    </nav>
+    <nav class="sidebar"><a class="sidebar-logo" href="../../generate_message/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"><a href="#">Module interpret_specs</a></h2><div class="sidebar-elems"><section><div class="block"><ul><li><a href="#enums">Enums</a></li><li><a href="#functions">Functions</a></li></ul></div></section></div></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../generate_message/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
+                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
+                        </div></form></nav></div><section id="main-content" class="content"><div class="main-heading">
+    <h1 class="fqn"><span class="in-band">Module <a href="../index.html">generate_message</a>::<wbr><a class="mod" href="#">interpret_specs</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../../clipboard.svg" width="19" height="18" alt="Copy item path"></button></span></h1><span class="out-of-band"><a class="srclink" href="../../src/generate_message/interpret_specs.rs.html#1-620">source</a> · <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span></div><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Fit network properties fetched via RPC call into data in expected format</p>
+<p>Fetched network properties contain data needed to make
+<a href="../../definitions/network_specs/struct.NetworkSpecsToSend.html"><code>NetworkSpecsToSend</code></a>, used
+in <a href="../../definitions/qr_transfers/struct.ContentAddSpecs.html"><code>ContentAddSpecs</code></a> payload.</p>
+<p>Network properties may contain:</p>
+<ul>
+<li>base58 prefix for the network (to be fit into <code>u16</code>)</li>
+<li>decimals to display balance-related values with correct order of magnitude
+(to be fit into <code>u8</code>)</li>
+<li>unit to display balance-related values with correct units (to be fit into
+<code>String</code>)</li>
+</ul>
+<p>There could be base58 prefix information in network metadata. If base58
+prefix is fetched via <code>system_properties</code> RPC call and the metadata contains
+<code>SS58Prefix</code> constant, they must be matching for the network to be
+suitable for use in the Signer. If no base58 prefix is encountered at all,
+network is not suitable for use in Signer either.</p>
+<p>Some networks support more than one token, in this case RPC returns an array
+of decimals and an array of units, that must have equal length. No mechanism
+to automatically choose a token from the fetched set is currently present.</p>
+<p>Some other networks have no token at all.</p>
+<p>For networks with token set or no token, decimals default to <code>0</code> and units
+default to <code>UNIT</code>. For networks with token set there could be a token
+override applied by user in command line sequence, to set the decimals and
+units manually. Token override is not supported for networks that have a
+single token or no token.</p>
+<p>Command line with token override:</p>
+<p><code>$ cargo run add-specs -d -u &lt;url_address&gt; --encryption sr25519 --token-decimals &lt;decimals&gt; --token-unit &lt;unit&gt;</code></p>
+</div></details><h2 id="enums" class="small-section-header"><a href="#enums">Enums</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.TokenFetch.html" title="generate_message::interpret_specs::TokenFetch enum">TokenFetch</a></div><div class="item-right docblock-short"><p>Accepted token from <code>system_properties</code> RPC call</p>
+</div></div></div><h2 id="functions" class="small-section-header"><a href="#functions">Functions</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.check_specs.html" title="generate_message::interpret_specs::check_specs fn">check_specs</a></div><div class="item-right docblock-short"><p>Get from <code>system_properties</code> RPC call results the network data to be
+compared with already known data.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.interpret_properties.html" title="generate_message::interpret_specs::interpret_properties fn">interpret_properties</a></div><div class="item-right docblock-short"><p>Transform <code>system_properties</code> RPC call results into <a href="../../definitions/network_specs/struct.NetworkProperties.html" title="NetworkProperties"><code>NetworkProperties</code></a>.</p>
+</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="generate_message" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
+</body></html>

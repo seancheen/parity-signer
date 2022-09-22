@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["db_handling"] = [{"text":"impl ZeroizeOnDrop for <a class=\"struct\" href=\"db_handling/interface_signer/struct.SeedDraft.html\" title=\"struct db_handling::interface_signer::SeedDraft\">SeedDraft</a>","synthetic":false,"types":["db_handling::interface_signer::SeedDraft"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

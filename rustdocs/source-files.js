@@ -1,0 +1,17 @@
+var sourcesIndex = {};
+sourcesIndex["constants"] = {"name":"","files":["lib.rs","test_values.rs"]};
+sourcesIndex["db_handling"] = {"name":"","files":["cold_default.rs","db_transactions.rs","error.rs","helpers.rs","hot_default.rs","identities.rs","interface_signer.rs","lib.rs","manage_history.rs"]};
+sourcesIndex["defaults"] = {"name":"","files":["error.rs","lib.rs"]};
+sourcesIndex["definitions"] = {"name":"","files":["crypto.rs","danger.rs","error.rs","error_active.rs","error_signer.rs","helpers.rs","history.rs","keyring.rs","lib.rs","metadata.rs","navigation.rs","network_specs.rs","qr_transfers.rs","types.rs","users.rs"]};
+sourcesIndex["generate_message"] = {"name":"","files":["derivations.rs","error.rs","fetch_metadata.rs","helpers.rs","interpret_specs.rs","lib.rs","load.rs","make_message.rs","parser.rs","remove.rs","show.rs","specs.rs"]};
+sourcesIndex["navigator"] = {"name":"","files":["actions.rs","alerts.rs","error.rs","lib.rs","modals.rs","navstate.rs","screens.rs"]};
+sourcesIndex["parser"] = {"name":"","files":["cards.rs","decoding_commons.rs","decoding_older.rs","decoding_sci.rs","decoding_sci_ext.rs","error.rs","lib.rs","method.rs"]};
+sourcesIndex["printing_balance"] = {"name":"","files":["lib.rs"]};
+sourcesIndex["qr_reader_pc"] = {"name":"","files":["lib.rs"]};
+sourcesIndex["qr_reader_phone"] = {"name":"","files":["lib.rs","parser.rs","process_payload.rs"]};
+sourcesIndex["qrcode_rtx"] = {"name":"","files":["lib.rs"]};
+sourcesIndex["qrcode_static"] = {"name":"","files":["lib.rs"]};
+sourcesIndex["signer"] = {"name":"","files":["ffi_types.rs","lib.rs"]};
+sourcesIndex["transaction_parsing"] = {"name":"","files":["add_specs.rs","cards.rs","check_signature.rs","derivations.rs","error.rs","helpers.rs","holds.rs","lib.rs","load_metadata.rs","load_types.rs","message.rs","parse_transaction.rs"]};
+sourcesIndex["transaction_signing"] = {"name":"","files":["error.rs","lib.rs","sign_message.rs","sign_transaction.rs"]};
+createSourceSidebar();

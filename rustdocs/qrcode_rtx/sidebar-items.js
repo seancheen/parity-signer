@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":[["make_pretty_qr","Function to make appropriately sized qr code, apng or static"]]};

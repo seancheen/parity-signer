@@ -1,0 +1,57 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Making and restoring cold database with default content"><meta name="keywords" content="rust, rustlang, rust-lang, cold_default"><title>db_handling::cold_default - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../db_handling/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"></h2>
+    </nav>
+    <nav class="sidebar"><a class="sidebar-logo" href="../../db_handling/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"><a href="#">Module cold_default</a></h2><div class="sidebar-elems"><section><div class="block"><ul><li><a href="#functions">Functions</a></li></ul></div></section></div></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../db_handling/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
+                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
+                        </div></form></nav></div><section id="main-content" class="content"><div class="main-heading">
+    <h1 class="fqn"><span class="in-band">Module <a href="../index.html">db_handling</a>::<wbr><a class="mod" href="#">cold_default</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../../clipboard.svg" width="19" height="18" alt="Copy item path"></button></span></h1><span class="out-of-band"><a class="srclink" href="../../src/db_handling/cold_default.rs.html#1-329">source</a> · <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span></div><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Making and restoring <strong>cold</strong> database with default content</p>
+<p>Cold database is the database that is operated from inside the Signer.</p>
+<p>Cold database contains following trees:</p>
+<ul>
+<li><code>ADDRTREE</code> with public addresses data</li>
+<li><code>HISTORY</code> with Signer history log</li>
+<li><code>METATREE</code> with network metadata</li>
+<li><code>SETTREE</code> with settings: types information, Signer dangerous exposures
+record and Signer database general verifier</li>
+<li><code>SPECSTREE</code> with network specs</li>
+<li><code>TRANSACTION</code> for temporary storage of the transaction data</li>
+<li><code>VERIFIERS</code> with network verifiers data</li>
+</ul>
+<p>For release, the cold database is generated on the hot side and then copied
+verbatim into Signer files during the build.</p>
+<p>Before the database could be used, it must be initiated:</p>
+<ul>
+<li>History log old entries (if any are present) are removed and a new entry
+<code>Event::DatabaseInitiated</code> is added</li>
+<li>General verifier is set and this event is recorded in the history log. By
+default, Signer sets up Parity-associated key as a general verifier. This
+could be later on changed by the user.</li>
+</ul>
+<p>Signer then reads and updates the database as it operates.</p>
+<p>There are two ways to reset the database from the Signer user interface.
+Either would remove all the keys and restore the database to the release
+state. The difference would be only in the general verifier setting:</p>
+<ul>
+<li><code>Wipe all data</code> would set the general verifier to default <code>Some(_)</code>,
+with Parity-associated key inside</li>
+<li><code>Remove general certificate</code> would set the general verifier to <code>None</code>.
+User would then be able to set up own general verifier, preferably
+immediately afterwards, by loading to Signer any verified data.
+Setting up a new general verifier would remove all data associated with the
+general verifier from the Signer database to avoid confusion as to who
+verified what information.</li>
+</ul>
+</div></details><h2 id="functions" class="small-section-header"><a href="#functions">Functions</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.init_db.html" title="db_handling::cold_default::init_db fn">init_db</a></div><div class="item-right docblock-short"><p>Initiate cold database and set up the database general verifier to given
+<a href="../../definitions/network_specs/struct.Verifier.html" title="Verifier"><code>Verifier</code></a>.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.populate_cold.html" title="db_handling::cold_default::populate_cold fn">populate_cold</a></div><div class="item-right docblock-short"><p>Generate initiated test cold database with default content, and create in it
+Alice default addresses.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.populate_cold_nav_test.html" title="db_handling::cold_default::populate_cold_nav_test fn">populate_cold_nav_test</a></div><div class="item-right docblock-short"><p>Generate <strong>not initiated</strong> test cold database for <code>navigator</code> testing.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.populate_cold_no_metadata.html" title="db_handling::cold_default::populate_cold_no_metadata fn">populate_cold_no_metadata</a></div><div class="item-right docblock-short"><p>Generate initiated test cold database without network metadata.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.populate_cold_no_networks.html" title="db_handling::cold_default::populate_cold_no_networks fn">populate_cold_no_networks</a></div><div class="item-right docblock-short"><p>Generate initiated test cold database with no network-associated data.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.signer_init_no_cert.html" title="db_handling::cold_default::signer_init_no_cert fn">signer_init_no_cert</a></div><div class="item-right docblock-short"><p>Initiate Signer database with general verifier set up to <code>Verifier(None)</code>.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.signer_init_with_cert.html" title="db_handling::cold_default::signer_init_with_cert fn">signer_init_with_cert</a></div><div class="item-right docblock-short"><p>Initiate Signer database with default general verifier (Parity-associated
+key).</p>
+</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="db_handling" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
+</body></html>

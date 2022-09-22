@@ -1,0 +1,57 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Add a set of new derived addresses: N+1, N+2, etc into Signer database."><meta name="keywords" content="rust, rustlang, rust-lang, create_increment_set"><title>create_increment_set in db_handling::identities - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc fn"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../db_handling/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"></h2>
+    </nav>
+    <nav class="sidebar"><a class="sidebar-logo" href="../../db_handling/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
+        </a><div class="sidebar-elems"><h2 class="location"><a href="index.html">In db_handling::identities</a></h2></div></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../db_handling/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
+                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
+                        </div></form></nav></div><section id="main-content" class="content"><div class="main-heading">
+    <h1 class="fqn"><span class="in-band">Function <a href="../index.html">db_handling</a>::<wbr><a href="index.html">identities</a>::<wbr><a class="fn" href="#">create_increment_set</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../../clipboard.svg" width="19" height="18" alt="Copy item path"></button></span></h1><span class="out-of-band"><a class="srclink" href="../../src/db_handling/identities.rs.html#761-806">source</a> · <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span></div><div class="docblock item-decl"><pre class="rust fn"><code>pub fn create_increment_set&lt;P&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;increment: <a class="primitive" href="https://doc.rust-lang.org/1.63.0/std/primitive.u32.html">u32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;multisigner: &amp;MultiSigner, <br>&nbsp;&nbsp;&nbsp;&nbsp;network_specs_key: &amp;<a class="struct" href="../../definitions/keyring/struct.NetworkSpecsKey.html" title="struct definitions::keyring::NetworkSpecsKey">NetworkSpecsKey</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;seed_phrase: &amp;<a class="primitive" href="https://doc.rust-lang.org/1.63.0/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;db_path: P<br>) -&gt; <a class="type" href="../type.Result.html" title="type db_handling::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.63.0/std/primitive.unit.html">()</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;P: <a class="trait" href="https://doc.rust-lang.org/1.63.0/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.63.0/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;,&nbsp;</span></code></pre></div><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Add a set of new derived addresses: N+1, N+2, etc into Signer database.</p>
+<p>The number of the added addresses is set by <code>increment</code> input.</p>
+<p>Input [<code>MultiSigner</code>] and <a href="../../definitions/keyring/struct.NetworkSpecsKey.html" title="NetworkSpecsKey"><code>NetworkSpecsKey</code></a> determine the address, and the
+associated <a href="../../definitions/users/struct.AddressDetails.html" title="AddressDetails"><code>AddressDetails</code></a> are found in the database. The derivations are
+based on the <code>path</code> from the <code>AddressDetails</code>.</p>
+<p>If the database has addressed in given network with path that could be
+interpreted as <code>&lt;path&gt;//&lt;number&gt;</code>, the first derivation of the increment set
+is <code>&lt;path&gt;//&lt;number&gt;+1</code>. If no such addresses are existing in the database,
+the first derivation of the increment set is <code>&lt;path&gt;//0</code>.</p>
+<p>Further derivations of the increment set have number part increased by 1
+until all requested derivations are generated.</p>
+<p>Note: this is intended only for addresses not protected by the password
+(i.e. having derivation path <strong>without</strong> <code>///&lt;password&gt;</code> part). If the
+increment set is created on a passworded address, only public derivation
+path part will be used for increment set generation.</p>
+<p>This function inputs secret seed phrase as <code>&amp;str</code>. It is passed as <code>&amp;str</code>
+into <code>create_address</code> and used there.</p>
+<h3 id="example"><a href="#example">Example</a></h3>
+<p>User creates increment set of 3 on derivation <code>//user</code>. Resulting
+derivations are:</p>
+<ul>
+<li><code>//user</code></li>
+<li><code>//user//0</code></li>
+<li><code>//user//1</code></li>
+<li><code>//user//2</code></li>
+</ul>
+<p>User creates increment set of 2 on <code>//user</code> again, resulting derivations
+are:</p>
+<ul>
+<li><code>//user</code></li>
+<li><code>//user//0</code></li>
+<li><code>//user//1</code></li>
+<li><code>//user//2</code></li>
+<li><code>//user//3</code></li>
+<li><code>//user//4</code></li>
+</ul>
+<p>If the increment set of 2 is created on <code>//user//0</code>, resulting derivations
+would be:</p>
+<ul>
+<li><code>//user</code></li>
+<li><code>//user//0</code></li>
+<li><code>//user//0//0</code></li>
+<li><code>//user//0//1</code></li>
+<li><code>//user//1</code></li>
+<li><code>//user//2</code></li>
+<li><code>//user//3</code></li>
+<li><code>//user//4</code></li>
+</ul>
+</div></details></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="db_handling" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
+</body></html>

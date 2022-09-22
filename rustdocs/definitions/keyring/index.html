@@ -1,0 +1,50 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Key types and key generation for hot and cold databases"><meta name="keywords" content="rust, rustlang, rust-lang, keyring"><title>definitions::keyring - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../definitions/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"></h2>
+    </nav>
+    <nav class="sidebar"><a class="sidebar-logo" href="../../definitions/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"><a href="#">Module keyring</a></h2><div class="sidebar-elems"><section><div class="block"><ul><li><a href="#structs">Structs</a></li></ul></div></section></div></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../definitions/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
+                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
+                        </div></form></nav></div><section id="main-content" class="content"><div class="main-heading">
+    <h1 class="fqn"><span class="in-band">Module <a href="../index.html">definitions</a>::<wbr><a class="mod" href="#">keyring</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../../clipboard.svg" width="19" height="18" alt="Copy item path"></button></span></h1><span class="out-of-band"><a class="srclink" href="../../src/definitions/keyring.rs.html#1-457">source</a> · <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span></div><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Key types and key generation for hot and cold databases</p>
+<p>Cold database has following trees:</p>
+<ul>
+<li><code>SPECSTREE</code>, for network specs <code>NetworkSpecs</code> entries, with keys
+<a href="struct.NetworkSpecsKey.html" title="NetworkSpecsKey"><code>NetworkSpecsKey</code></a></li>
+<li><code>VERIFIERS</code>, for network verifier <a href="../network_specs/enum.CurrentVerifier.html"><code>CurrentVerifier</code></a>
+entries, with keys <a href="struct.VerifierKey.html" title="VerifierKey"><code>VerifierKey</code></a></li>
+<li><code>METATREE</code>, for <code>Vec&lt;u8&gt;</code> metadata entries, with keys <a href="struct.MetaKey.html" title="MetaKey"><code>MetaKey</code></a> and
+prefix search with <a href="struct.MetaKeyPrefix.html" title="MetaKeyPrefix"><code>MetaKeyPrefix</code></a></li>
+<li><code>ADDRTREE</code>, for <a href="../users/struct.AddressDetails.html"><code>AddressDetails</code></a> entries
+with public information associated with user addresses, with keys
+<a href="struct.AddressKey.html" title="AddressKey"><code>AddressKey</code></a></li>
+<li><code>SETTREE</code>, for types information, Signer danger status, and general
+verifier</li>
+<li><code>TRANSACTION</code>, to temporarily store transaction information while waiting
+for user approval</li>
+<li><code>HISTORY</code>, for <a href="../history/struct.Entry.html"><code>Entry</code></a> log of all events
+happening in Signer, with keys <a href="struct.Order.html" title="Order"><code>Order</code></a></li>
+</ul>
+<p>Hot database has following trees:</p>
+<ul>
+<li><code>SPECSTREEPREP</code>, for network specs <a href="../network_specs/struct.NetworkSpecsToSend.html"><code>NetworkSpecsToSend</code></a>
+entries, with keys <a href="struct.NetworkSpecsKey.html" title="NetworkSpecsKey"><code>NetworkSpecsKey</code></a></li>
+<li><code>METATREE</code>, for <code>Vec&lt;u8&gt;</code> metadata entries, with keys <a href="struct.MetaKey.html" title="MetaKey"><code>MetaKey</code></a> and
+prefix search with <a href="struct.MetaKeyPrefix.html" title="MetaKeyPrefix"><code>MetaKeyPrefix</code></a></li>
+<li><code>META_HISTORY</code>, for [<code>H256</code>] block hash entries, with keys <a href="struct.MetaKey.html" title="MetaKey"><code>MetaKey</code></a> and
+prefix search with <a href="struct.MetaKeyPrefix.html" title="MetaKeyPrefix"><code>MetaKeyPrefix</code></a></li>
+<li><code>SETTREE</code>, for types information</li>
+<li><code>ADDRESS_BOOK</code> for <code>AddressBookEntry</code> data needed to maintain hot database
+and send RPC calls to fetch network information, with keys <code>AddressBookKey</code></li>
+</ul>
+</div></details><h2 id="structs" class="small-section-header"><a href="#structs">Structs</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.AddressBookKey.html" title="definitions::keyring::AddressBookKey struct">AddressBookKey</a></div><div class="item-right docblock-short"><p>Key in <code>ADDRESS_BOOK</code> tree (hot database)</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.AddressKey.html" title="definitions::keyring::AddressKey struct">AddressKey</a></div><div class="item-right docblock-short"><p>Key in <code>ADDRTREE</code> tree (cold database)</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.MetaKey.html" title="definitions::keyring::MetaKey struct">MetaKey</a></div><div class="item-right docblock-short"><p>Key in <code>METATREE</code> (cold and hot database) and in <code>META_HISTORY</code> tree (hot
+database)</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.MetaKeyPrefix.html" title="definitions::keyring::MetaKeyPrefix struct">MetaKeyPrefix</a></div><div class="item-right docblock-short"><p>Prefix for searching in <code>METATREE</code> (cold and hot database) and in
+<code>META_HISTORY</code> tree (hot database)</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.NetworkSpecsKey.html" title="definitions::keyring::NetworkSpecsKey struct">NetworkSpecsKey</a></div><div class="item-right docblock-short"><p>Key in <code>SPECSTREE</code> tree (cold database) and in <code>SPECSPREPTREE</code> (hot database)</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.Order.html" title="definitions::keyring::Order struct">Order</a></div><div class="item-right docblock-short"><p>Key in <code>HISTORY</code> tree (cold database)</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.VerifierKey.html" title="definitions::keyring::VerifierKey struct">VerifierKey</a></div><div class="item-right docblock-short"><p>Key in <code>VERIFIERS</code> tree (cold database)</p>
+</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="definitions" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
+</body></html>

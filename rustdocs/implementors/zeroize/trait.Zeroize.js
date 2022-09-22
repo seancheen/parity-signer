@@ -1,0 +1,4 @@
+(function() {var implementors = {};
+implementors["db_handling"] = [{"text":"impl Zeroize for <a class=\"struct\" href=\"db_handling/interface_signer/struct.SeedDraft.html\" title=\"struct db_handling::interface_signer::SeedDraft\">SeedDraft</a>","synthetic":false,"types":["db_handling::interface_signer::SeedDraft"]}];
+implementors["navigator"] = [{"text":"impl Zeroize for <a class=\"struct\" href=\"navigator/screens/struct.EnteredInfo.html\" title=\"struct navigator::screens::EnteredInfo\">EnteredInfo</a>","synthetic":false,"types":["navigator::screens::EnteredInfo"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
