@@ -114,7 +114,7 @@ dependencies {
 	androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_libs_version"
 	debugImplementation "androidx.compose.ui:ui-tooling:$compose_libs_version"
 	implementation 'androidx.core:core-ktx:1.8.0'
-	implementation "net.java.dev.jna:jna:5.12.1@aar"
+	implementation "net.java.dev.jna:jna:5.13.0@aar"
 }
 
 preBuild.dependsOn "cargoBuild","buildDB"
